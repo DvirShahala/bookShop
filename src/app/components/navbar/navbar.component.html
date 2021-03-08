@@ -1,0 +1,31 @@
+<mat-toolbar class="navbar">
+  <span routerLink="/regularPage">Books Shop</span>
+  <span class="spacer"></span>
+
+  <input
+    id="searchItem"
+    (keyup)="onKeyup($event.target.value)"
+    type="search"
+    placeholder="Search Books"
+  />
+
+  <button *ngIf="ifAdmin" (click)="addNewBook()" mat-stroked-button>Add new book</button>
+
+  <button *ngIf="!isLogin" mat-stroked-button routerLink="login">
+    Log in / Sign up
+  </button>
+  <button *ngIf="isLogin" (click)="logOut()" mat-stroked-button routerLink="">
+    Logout
+  </button>
+
+  <mat-icon
+    class="cart"
+    routerLink="cart"
+    matBadge="{{ numOfItems }}"
+    matBadgeSize="small"
+    matBadgeColor="primary"
+    >shopping_cart</mat-icon
+  >
+</mat-toolbar>
+
+<router-outlet></router-outlet>

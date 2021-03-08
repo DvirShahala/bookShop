@@ -1,0 +1,64 @@
+<div class="content">
+  <div fxLayout="row wrap" fxLayoutGap="16px grid">
+    <div
+      fxFlex="25%"
+      fxFlex.xs="100%"
+      fxFlex.sm="33%"
+      *ngFor="let book of listOfBooks"
+    >
+      <mat-card class="bookCard">
+        <mat-card-header>
+          <mat-card-title>{{ book.book }}</mat-card-title>
+          <mat-card-subtitle class="author">{{
+            book.author
+          }}</mat-card-subtitle>
+          <mat-card-subtitle class="publish">{{
+            book.publisher
+          }}</mat-card-subtitle>
+        </mat-card-header>
+        <img class="cardImg" mat-card-image [src]="book.cover" />
+        <mat-card-content>
+          <p fxLayoutAlign="center center">Price: {{ book.price }}$</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <div *ngIf="!if_admin" fxLayoutAlign="center center">
+            <button
+            *ngIf="!ifPurchase(book.id) && isBookInCart(book)"
+            mat-flat-button
+            color="primary"
+            (click)="addToCart(book)"
+            [disabled]= true
+          >
+            Added to cart
+          </button>
+
+            <button
+              *ngIf="!ifPurchase(book.id) && !isBookInCart(book)"
+              mat-flat-button
+              color="primary"
+              (click)="addToCart(book)"
+            >
+              Add to cart
+            </button>
+
+            <div *ngIf="ifPurchase(book.id)">
+              You have already purchased this book
+            </div>
+          </div>
+          <div *ngIf="if_admin" fxLayoutAlign="space-evenly center">
+            <button
+              (click)="updateBook(book)"
+              mat-flat-button
+              class="updateButton"
+            >
+              Update book
+            </button>
+            <button (click)="deleteBook(book.id)" mat-flat-button color="warn">
+              Delete book
+            </button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

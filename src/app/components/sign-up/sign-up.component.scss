@@ -1,0 +1,21 @@
+.backgroundDiv {
+  background-image: url("../../../assets/images/bookBackground.jpg");
+  min-height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.loginCard {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: 30%;
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+}
+.signInClick {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #1d11e6;
+}

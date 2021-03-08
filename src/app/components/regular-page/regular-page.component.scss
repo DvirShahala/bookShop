@@ -1,0 +1,30 @@
+// .cardImg {
+//   // width: 20em;
+//   // height: 20em;
+// }
+.bookCard {
+  width: 70%;
+}
+.content {
+  padding: 20px;
+  background-color: rgb(228, 225, 222);
+}
+.content > .bookCard {
+  width: 200px;
+}
+.publish {
+  font-size: 12px;
+}
+.author, p {
+  font-size: 16px;
+}
+.mat-card-subtitle {
+  margin-bottom: 7px;
+}
+.mat-card-title {
+  font-size: 16px;
+}
+.updateButton {
+  background-color: rgb(2, 180, 2);
+  color: white;
+}

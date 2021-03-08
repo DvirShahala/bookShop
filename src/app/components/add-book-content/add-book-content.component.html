@@ -1,0 +1,53 @@
+<div class="dialogContent">
+  <h2 mat-dialog-title>Add new Book</h2>
+
+  <form [formGroup]="formGroup" class="addForm">
+    <div fxLayout="column" fxLayoutAlign="space-around">
+      <mat-form-field>
+        <mat-label>Book Title</mat-label>
+        <input formControlName="book" matInput />
+        <mat-error *ngIf="!formGroup.controls['book'].valid">
+          {{ getErrorBook() }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Author</mat-label>
+        <input formControlName="author" matInput />
+        <mat-error *ngIf="!formGroup.controls['author'].valid">
+          {{ getErrorAuthor() }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Publisher</mat-label>
+        <input formControlName="publisher" matInput />
+        <mat-error *ngIf="!formGroup.controls['publisher'].valid">
+          {{ getErrorPublisher() }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Cover</mat-label>
+        <input placeholder="link to image" formControlName="cover" matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Price</mat-label>
+        <input formControlName="price" matInput />
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center">
+      <button mat-button mat-dialog-close>Close</button>
+      <button
+        (click)="addBook(formGroup.value)"
+        mat-button
+        cdkFocusInitial
+        [disabled]="!formGroup.valid"
+      >
+        Add
+      </button>
+      <div>{{ messageForAdd }}</div>
+    </div>
+  </form>
+</div>

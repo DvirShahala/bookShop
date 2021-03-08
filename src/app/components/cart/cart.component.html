@@ -1,0 +1,55 @@
+<div class="content">
+  <div
+    fxLayout="row wrap"
+    fxLayoutGap="16px grid"
+    fxLayoutAlign="center center"
+  >
+    <div
+      fxFlex="25%"
+      fxFlex.xs="100%"
+      fxFlex.sm="33%"
+      *ngFor="let book of itemsInCart"
+    >
+      <mat-card class="bookCard">
+        <mat-card-header>
+          <mat-card-title>{{ book.book }}</mat-card-title>
+          <mat-card-subtitle class="author">{{
+            book.author
+          }}</mat-card-subtitle>
+          <mat-card-subtitle class="publish">{{
+            book.publisher
+          }}</mat-card-subtitle>
+        </mat-card-header>
+        <img class="cardImg" mat-card-image [src]="book.cover" />
+        <mat-card-content>
+          <p fxLayoutAlign="center center">Price: {{ book.price }}$</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <div fxLayoutAlign="center center">
+            <button mat-flat-button color="warn" (click)="removeItem(book)">
+              Remove From Cart
+            </button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div *ngIf="itemsInCart">
+      Number of books: {{ itemsInCart.length }}
+      <button mat-flat-button color="accent" (click)="purchaseBooks()">
+        Click Here to Purchase
+      </button>
+    </div>
+  </div>
+  <h1
+    class="emptyTitle"
+    fxLayoutAlign="center center"
+    *ngIf="!this.itemsInCart"
+  >
+    Youre Cart is empty :(
+  </h1>
+
+  
+  <div fxLayoutAlign="center center" *ngIf="if_succses">
+    <h1>The purchases were made successfully</h1>
+  </div>
+</div>

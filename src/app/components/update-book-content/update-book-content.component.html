@@ -1,0 +1,49 @@
+<div class="dialogContent">
+<h2 mat-dialog-title>Update Book</h2>
+<h3>Curret Details</h3>
+<div>Book: {{ bookToUpdate.book }}</div>
+<div>Author: {{ bookToUpdate.author }}</div>
+<div>Publisher: {{ bookToUpdate.publisher }}</div>
+<div>Price: {{ bookToUpdate.price }}$</div>
+
+<h3>New Details</h3>
+<form [formGroup]="formGroup" class="updateForm">
+  <div fxLayout="column" fxLayoutAlign="space-around">
+    <mat-form-field>
+      <mat-label>New Book Title</mat-label>
+      <input formControlName="book" matInput />
+      <mat-error *ngIf="!formGroup.controls['book'].valid">
+        {{ getErrorBook() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>New Author</mat-label>
+      <input formControlName="author" matInput />
+      <mat-error *ngIf="!formGroup.controls['author'].valid">
+        {{ getErrorAuthor() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>New Publisher</mat-label>
+      <input formControlName="publisher" matInput />
+      <mat-error *ngIf="!formGroup.controls['publisher'].valid">
+        {{ getErrorPublisher() }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <button mat-button mat-dialog-close>Close</button>
+<button
+  (click)="updateBook(bookToUpdate.id, formGroup.value)"
+  mat-button
+  cdkFocusInitial
+  [disabled]="!formGroup.valid"
+>
+  Update
+</button>
+<div>{{messageForUpdate}}</div>
+</form>
+</div>
+
+
