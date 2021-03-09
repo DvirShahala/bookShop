@@ -30,7 +30,7 @@ export class RegularPageComponent implements OnInit {
     this.getBooks();
     this.bookService.booksListChanges$.subscribe((res: BookAtt[]) => {
       this.listOfBooks = res;
-    })
+    })  
   }
 
   // Get the current user ans check if admin

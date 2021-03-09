@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private loginService: AuthService,
-    private rouetr: Router) { }
+    private router: Router) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -47,28 +47,14 @@ export class LoginComponent implements OnInit {
       this.formGroup.get('password').hasError('requirements') ? 'Password must be between 6 and 20 characters' : '';
   }
 
-  // async onSubmit(userDetails: UserAttr) {
-  //   await this.loginService.checkAuthenticated(userDetails)
-  //     .then((user: UserDoc) => {
-  //       localStorage.setItem('userId', user.id);
-  //       localStorage.setItem('admin', String(user.admin));
-  //       this.rouetr.navigate(['regularPage']);
-  //     })
-  //     .catch(err => {
-  //       console.error(err);
-
-  //       err.error.errors.forEach(errMsg => {
-  //         this.invalidErrorMsg = errMsg.message;
-  //       });
-  //     })
-  // }
-
   async onSubmit(userDetails: UserAttr) {
     try {
       const user = await this.loginService.checkAuthenticated(userDetails);
       localStorage.setItem('userId', user.id);
+      this.loginService.setCurrentUserId(user.id);
       localStorage.setItem('admin', String(user.admin));
-      this.rouetr.navigate(['regularPage']);
+      this.loginService.setCurrentAdminStatus(user.admin);
+      this.router.navigate(['regularPage']);
     } catch (err) {
       console.error(err);
       err.error.errors.forEach(errMsg => {

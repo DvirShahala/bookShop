@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { BooksService } from 'src/app/services/books/books.service';
 import { FormControl } from '@angular/forms';
-import { BookAtt } from '../../models/interfaces';
+import { BookAtt, CurrentUser } from '../../models/interfaces';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
   numOfItems: number = 0;
   itemsInCart: BookAtt[] = [];
   isLogin: boolean = false;
-  ifAdmin: boolean = false
+  ifAdmin: boolean = false;
 
   constructor(private bookService: BooksService,
     private authService: AuthService,
@@ -30,12 +30,27 @@ export class NavbarComponent implements OnInit {
 
   // It is not secure but for the maim purpose I checked from localstorage
   ngOnInit(): void {
-    if (localStorage.getItem("userId")) {
-      this.isLogin = true;
+
+    if (localStorage.getItem("userId") && !this.authService.getCurrentUserId()) {
+      // After refresh we set again the behaviour subject value
+      this.authService.setCurrentUserId(localStorage.getItem("userId"))
     }
-    if (localStorage.getItem("admin") == "true") {
-      this.ifAdmin = true;
+    if (localStorage.getItem("admin") && !this.authService.getAdminStatus()) {
+      this.authService.setCurrentAdminStatus(Boolean(localStorage.getItem("admin")));
     }
+    this.authService.adminStatus$.subscribe((admin: boolean) => {
+
+      this.ifAdmin = admin;
+    })
+
+    this.authService.currentUserId$.subscribe((currUserId: string) => {
+      if (currUserId != null) {
+        this.isLogin = true;
+        console.log(Boolean(localStorage.getItem("admin")));
+      } else {
+        this.isLogin = false;
+      }
+    })
     this.cartService.cartListChanges$.subscribe((res: BookAtt[]) => {
       if (res != null) {
         this.numOfItems = res.length;
@@ -59,6 +74,8 @@ export class NavbarComponent implements OnInit {
   async logOut() {
     await this.authService.signOut();
     localStorage.clear();
+    this.authService.setCurrentUserId(null);
+    this.authService.setCurrentAdminStatus(null);
     this.rouetr.navigate(['login']);
     this.cartService.clearCartList();
     this.numOfItems = 0;
