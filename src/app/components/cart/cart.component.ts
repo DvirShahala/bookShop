@@ -38,7 +38,7 @@ export class CartComponent implements OnInit {
 
   // Add book to cart
   addToCart(book: BookAtt) {
-    let currentCartList = this.cartService.getCartList();
+    const currentCartList = this.cartService.getCartList();
     currentCartList.push(book);
     this.cartService.setCartList(currentCartList);
   }

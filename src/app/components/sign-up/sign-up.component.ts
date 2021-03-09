@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { userAttr } from '../../models/interfaces';
+import { UserAttr } from '../../models/interfaces';
 
 @Component({
   selector: 'app-sign-up',
@@ -10,30 +10,30 @@ import { userAttr } from '../../models/interfaces';
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
+  EMAIL_REGEX_VALIDATION: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   formGroup: FormGroup;
   hide: boolean = true;
-  userDetails: userAttr;
+  userDetails: UserAttr;
   invalidErrorMsg: String = '';
 
   constructor(private formBuilder: FormBuilder,
     private signUpService: AuthService,
-    private rouetr: Router) { }
+    private router: Router) { }
 
   ngOnInit(): void {
     this.createForm();
   }
 
   createForm() {
-    let emailregex: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     this.formGroup = this.formBuilder.group({
-      'email': [null, [Validators.required, Validators.pattern(emailregex)]],
+      'email': [null, [Validators.required, Validators.pattern(this.EMAIL_REGEX_VALIDATION)]],
       'password': [null, [Validators.required, this.checkLengthPassword]],
     });
   }
 
-  checkLengthPassword(control: any) {
-    let enteredPassword = control.value;
-    let passwordCheck = /^.{6,20}$/;
+  checkLengthPassword(control) {
+    const enteredPassword = control.value;
+    const passwordCheck = /^.{6,20}$/;
     return (!passwordCheck.test(enteredPassword) && enteredPassword) ? { 'requirements': true } : null;
   }
 
@@ -47,17 +47,16 @@ export class SignUpComponent implements OnInit {
       this.formGroup.get('password').hasError('requirements') ? 'Password must be between 6 and 20 characters' : '';
   }
 
-  async onSubmit(userDetails: userAttr) {
-    await this.signUpService.createAccount(userDetails)
-    .then((user: any) => {
+  async onSubmit(userDetails: UserAttr) {
+    try {
+      const user = await this.signUpService.createAccount(userDetails);
       this.invalidErrorMsg = "The user was successfully created";
-      this.rouetr.navigate(['/login']);
-    })
-    .catch(err => {
-      console.log(err);
+      this.router.navigate(['/login']);
+    } catch (err) {
+      console.error(err);
       err.error.errors.forEach(errMsg => {
         this.invalidErrorMsg = errMsg.message;
       });
-    })
+    }
   }
 }

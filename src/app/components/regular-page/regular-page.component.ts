@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BookAtt, currentUser } from 'src/app/models/interfaces';
+import { BookAtt, CurrentUser } from 'src/app/models/interfaces';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { BooksService } from 'src/app/services/books/books.service';
 import { CartService } from 'src/app/services/cart/cart.service';
@@ -18,7 +18,7 @@ export class RegularPageComponent implements OnInit {
   if_selectBook: boolean = false;
   selectBookToShow: BookAtt;
   if_admin: boolean = false;
-  currentU: currentUser = null;
+  currentU: CurrentUser = null;
 
   constructor(private bookService: BooksService,
     private authService: AuthService,
@@ -34,15 +34,14 @@ export class RegularPageComponent implements OnInit {
   }
 
   // Get the current user ans check if admin
-  getCurrentUser() {
-    this.authService.currentUser()
-      .then(user => {
-        this.currentU = user;
-        this.if_admin = this.currentU.admin;
-      })
-      .catch(err => {
-        console.log(err);
-      })
+  async getCurrentUser() {
+    try {
+      const user = await this.authService.currentUser();
+      this.currentU = user;
+      this.if_admin = this.currentU.admin;
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // Get list of books
@@ -53,12 +52,8 @@ export class RegularPageComponent implements OnInit {
   }
 
   // Check if purchased the book
-  ifPurchase(bookId: string): boolean {
-    const find = this.purchaseBooks.findIndex(book => book.id == bookId);
-    if (find != -1) {
-      return true;
-    }
-    return false;
+  isPurchased(bookId: string): boolean {
+    return Boolean(this.purchaseBooks.find(book => book.id == bookId));
   }
 
   // Add to cart a book

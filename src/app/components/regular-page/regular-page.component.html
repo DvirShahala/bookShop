@@ -23,7 +23,7 @@
         <mat-card-actions>
           <div *ngIf="!if_admin" fxLayoutAlign="center center">
             <button
-            *ngIf="!ifPurchase(book.id) && isBookInCart(book)"
+            *ngIf="!isPurchased(book.id) && isBookInCart(book)"
             mat-flat-button
             color="primary"
             (click)="addToCart(book)"
@@ -33,7 +33,7 @@
           </button>
 
             <button
-              *ngIf="!ifPurchase(book.id) && !isBookInCart(book)"
+              *ngIf="!isPurchased(book.id) && !isBookInCart(book)"
               mat-flat-button
               color="primary"
               (click)="addToCart(book)"
@@ -41,7 +41,7 @@
               Add to cart
             </button>
 
-            <div *ngIf="ifPurchase(book.id)">
+            <div *ngIf="isPurchased(book.id)">
               You have already purchased this book
             </div>
           </div>

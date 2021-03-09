@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
-import { userAttr, userDoc } from '../../models/interfaces';
+import { UserAttr, UserDoc } from '../../models/interfaces';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +10,7 @@ import { userAttr, userDoc } from '../../models/interfaces';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  EMAIL_REGEX_VALIDATION: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   formGroup: FormGroup;
   hide: boolean = true;
   invalidErrorMsg: String = '';
@@ -24,17 +25,16 @@ export class LoginComponent implements OnInit {
   }
 
   createForm() {
-    let emailregex: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     this.formGroup = this.formBuilder.group({
-      'email': [null, [Validators.required, Validators.pattern(emailregex)]],
+      'email': [null, [Validators.required, Validators.pattern(this.EMAIL_REGEX_VALIDATION)]],
       'password': [null, [Validators.required, this.checkLengthPassword]],
     });
   }
 
-  checkLengthPassword(control: any) {
-    let enteredPassword = control.value;
-    let passwordCheck = /^.{6,20}$/;
-    return (!passwordCheck.test(enteredPassword) && enteredPassword) ? { 'requirements': true } : null;
+  checkLengthPassword(control) {
+    const enteredPassword = control.value;
+    const passwordCheck = /^.{6,20}$/;
+    return (!(passwordCheck.test(enteredPassword)) && enteredPassword) ? { 'requirements': true } : null;
   }
 
   getErrorEmail() {
@@ -46,20 +46,34 @@ export class LoginComponent implements OnInit {
     return this.formGroup.get('password').hasError('required') ? 'Password is required' :
       this.formGroup.get('password').hasError('requirements') ? 'Password must be between 6 and 20 characters' : '';
   }
-  
-  async onSubmit(userDetails: userAttr) {
-    await this.loginService.checkAuthenticated(userDetails)
-      .then((user: userDoc) => {
-        localStorage.setItem('userId', user.id);
-        localStorage.setItem('admin', String(user.admin));
-        this.rouetr.navigate(['regularPage']);
-      })
-      .catch(err => {
-        console.log(err);
 
-        err.error.errors.forEach(errMsg => {
-          this.invalidErrorMsg = errMsg.message;
-        });
-      })
+  // async onSubmit(userDetails: UserAttr) {
+  //   await this.loginService.checkAuthenticated(userDetails)
+  //     .then((user: UserDoc) => {
+  //       localStorage.setItem('userId', user.id);
+  //       localStorage.setItem('admin', String(user.admin));
+  //       this.rouetr.navigate(['regularPage']);
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+
+  //       err.error.errors.forEach(errMsg => {
+  //         this.invalidErrorMsg = errMsg.message;
+  //       });
+  //     })
+  // }
+
+  async onSubmit(userDetails: UserAttr) {
+    try {
+      const user = await this.loginService.checkAuthenticated(userDetails);
+      localStorage.setItem('userId', user.id);
+      localStorage.setItem('admin', String(user.admin));
+      this.rouetr.navigate(['regularPage']);
+    } catch (err) {
+      console.error(err);
+      err.error.errors.forEach(errMsg => {
+        this.invalidErrorMsg = errMsg.message;
+      });
+    }
   }
 }

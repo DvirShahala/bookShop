@@ -26,7 +26,7 @@ export class CartService {
   }
 
   addToCart(book: BookAtt) {
-    let currentCartList = this.getCartList();
+    const currentCartList = this.getCartList();
     currentCartList.push(book);
     this.setCartList(currentCartList);
   }

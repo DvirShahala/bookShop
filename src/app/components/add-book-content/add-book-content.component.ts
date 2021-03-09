@@ -40,18 +40,30 @@ export class AddBookContentComponent implements OnInit {
   }
 
   // Add new book
-  async addBook(newBookVal: BookAtt) {
-    await this.bookService.createBook(newBookVal)
-      .then(newBook => {
-        this.messageForAdd = "Add sucssefuly";
-        this.bookService.addBookToList(newBook);
-      })
-      .catch(err => {
-        console.log(err);
+  // async addBook(newBookVal: BookAtt) {
+  //   await this.bookService.createBook(newBookVal)
+  //     .then(newBook => {
+  //       this.messageForAdd = "Add sucssefuly";
+  //       this.bookService.addBookToList(newBook);
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
 
-        err.error.errors.forEach(errMsg => {
-          this.messageForAdd = errMsg.message;
-        });
-      })
+  //       err.error.errors.forEach(errMsg => {
+  //         this.messageForAdd = errMsg.message;
+  //       });
+  //     })
+  // }
+  async addBook(newBookVal: BookAtt) {
+    try {
+      const newBook = await this.bookService.createBook(newBookVal)
+      this.messageForAdd = "Added successfully";
+      this.bookService.addBookToList(newBook);
+    } catch (err) {
+      console.error(err);
+      err.error.errors.forEach(errMsg => {
+        this.messageForAdd = errMsg.message;
+      });
+    }
   }
 }

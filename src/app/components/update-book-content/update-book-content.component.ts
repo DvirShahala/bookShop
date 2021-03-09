@@ -39,9 +39,9 @@ export class UpdateBookContentComponent implements OnInit {
     return this.formGroup.get('publisher').hasError('required') ? 'Publisher name is required' : '';
   }
 
-  async updateBook(bookId: string, newValue) {
+  updateBook(bookId: string, newValue) {
     const updatedBook = { "id": bookId, "book": newValue.book, "author": newValue.author, "publisher": newValue.publisher };
-    await this.bookService.updateBook(updatedBook)
+    this.bookService.updateBook(updatedBook)
       .then(updateBook => {
         this.messageForUpdate = "Update sucssefuly";
         this.bookService.getBooks().then(val => {
@@ -49,8 +49,7 @@ export class UpdateBookContentComponent implements OnInit {
         })
       })
       .catch(err => {
-        console.log(err);
-
+        console.error(err);
         err.error.errors.forEach(errMsg => {
           this.messageForUpdate = errMsg.message;
         });

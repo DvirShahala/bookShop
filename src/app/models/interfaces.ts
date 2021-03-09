@@ -1,13 +1,13 @@
-export interface userAttr {
+export interface UserAttr {
     email: string;
     password: string;
 }
 
-export interface userDoc {
+export interface UserDoc {
     email: string;
     id: string;
     admin: boolean;
-    purchaseBooks: any;
+    purchaseBooks: string[];
 }
 
 export interface BookAtt {
@@ -19,7 +19,7 @@ export interface BookAtt {
     id: string;
 }
 
-export interface currentUser {
+export interface CurrentUser {
     id: string,
     email: string,
     admin: boolean,

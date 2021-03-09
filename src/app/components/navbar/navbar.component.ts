@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { BooksService } from 'src/app/services/books/books.service';
 import { FormControl } from '@angular/forms';
@@ -28,11 +28,12 @@ export class NavbarComponent implements OnInit {
     private rouetr: Router,
     public dialog: MatDialog) { }
 
+  // It is not secure but for the maim purpose I checked from localstorage
   ngOnInit(): void {
     if (localStorage.getItem("userId")) {
       this.isLogin = true;
     }
-    if (localStorage.getItem("admin")) {
+    if (localStorage.getItem("admin") == "true") {
       this.ifAdmin = true;
     }
     this.cartService.cartListChanges$.subscribe((res: BookAtt[]) => {
@@ -42,13 +43,8 @@ export class NavbarComponent implements OnInit {
     })
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   this.isLogin = !this.isLogin;
-  // }
-
-  async onKeyup(event) {
-    console.log(event);
-    if (event.length >= 3) {
+  async onKeyUp(bookName) {
+    if (bookName.length >= 3) {
       this.debouncedGetCitities(event);
     }
   }
